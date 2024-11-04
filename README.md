@@ -1,2 +1,2 @@
 # qcell-sim-registration
-Register a Qcell sim.
+Register your qcell sim.
