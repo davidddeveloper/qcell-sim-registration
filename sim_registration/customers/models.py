@@ -1,3 +1,5 @@
+import django
+import datetime
 from django.db import models
 
 # Create your models here.
@@ -49,6 +51,7 @@ class Customer(models.Model):
     id_picture = models.CharField("Photo of ID", max_length=200)
     address = models.CharField("Address", max_length=200)
     nationality = models.CharField("Nationality", max_length=100)
+    date_created = models.DateTimeField(verbose_name="Date Created", default=django.utils.timezone.now())
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
