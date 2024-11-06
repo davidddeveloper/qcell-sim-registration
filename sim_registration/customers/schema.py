@@ -40,7 +40,6 @@ class CreateCustomer(graphene.Mutation):
         nationality = graphene.String(required=True)
         date_created = graphene.DateTime()
 
-
     ok = graphene.Boolean()
     customer = graphene.Field(CustomerType)
 
@@ -69,6 +68,17 @@ class CreateCustomer(graphene.Mutation):
         customer.save()
         return CreateCustomer(customer=customer)
 
+class deleteCustomer(graphene.Mutation):
+    class Arguments:
+        id = graphene.Int(required=True)
+
+    ok = graphene.Boolean()
+
+    def mutate(self, info, id):
+        customer = Customer.objects.get(id=id)
+        customer.delete()
+        return deleteCustomer(ok=True)
+
 class Query(graphene.ObjectType):
     """
         Represent the root class that
@@ -89,6 +99,7 @@ class Query(graphene.ObjectType):
 
 class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()
+    delete_customer = deleteCustomer.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
