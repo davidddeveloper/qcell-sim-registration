@@ -1,6 +1,11 @@
 import graphene
+import graphql_jwt
 from graphene_django import DjangoObjectType
 from .models import Customer, SimType, IDType
+from .middleware import AuthMiddleware
+from graphql_jwt.decorators import login_required
+from graphql_jwt.shortcuts import get_token
+from django.contrib.auth import authenticate, get_user_model, login, logout
 
 class CustomerType(DjangoObjectType):
     """
@@ -25,6 +30,11 @@ class IDTypeType(DjangoObjectType):
     class Meta:
         model = IDType
         fields = "__all__"
+
+class UserType(DjangoObjectType):
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'email', 'first_name', 'last_name')
 
 class CreateCustomer(graphene.Mutation):
     class Arguments:
@@ -79,7 +89,7 @@ class deleteCustomer(graphene.Mutation):
         customer.delete()
         return deleteCustomer(ok=True)
 
-class Query(graphene.ObjectType):
+class Query(AuthMiddleware,graphene.ObjectType):
     """
         Represent the root class that
         specifies the set of operation for quering
@@ -91,30 +101,54 @@ class Query(graphene.ObjectType):
     sim_types = graphene.List(SimTypeType)
     id_types = graphene.List(IDTypeType)
 
+    @login_required
     def resolve_customer(self, info, *args, **kwargs):
         id = kwargs.get('id')
         return Customer.objects.get(id=id)
 
+    @login_required
     def resolve_id_type(self, info, *args, **kwargs):
         id = kwargs.get('id')
         return IDType.objects.get(id=id)
 
+    @login_required
     def resolve_sim_type(self, info, *args, **kwargs):
         id = kwargs.get('id')    
         return SimType.objects.get(id=id)
 
+    @login_required
     def resolve_customers(self, info, *args, **kwargs):
         return Customer.objects.all()
 
+    @login_required
     def resolve_sim_types(self, info, *args, **kwargs):
         return SimType.objects.all()
 
+    @login_required
     def resolve_id_types(self, info, *args, **kwargs):
         return IDType.objects.all()
 
-class Mutation(graphene.ObjectType):
+class Login(graphene.Mutation):
+    token = graphene.String()
+    user = graphene.Field(UserType)
+
+    class Arguments:
+        username = graphene.String()
+        password = graphene.String()
+
+    def mutate(self, info, username, password):
+        user = authenticate(username=username, password=password)
+        if user is None:
+            raise Exception('Invalid username or password')
+
+        token = get_token(user)
+        login(info.context, user)
+        return Login(token=token, user=user)
+
+class Mutation(AuthMiddleware, graphene.ObjectType):
+    #token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     create_customer = CreateCustomer.Field()
     delete_customer = deleteCustomer.Field()
-
+    login = Login.Field()
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
