@@ -84,7 +84,9 @@ class Query(graphene.ObjectType):
         Represent the root class that
         specifies the set of operation for quering
     """
-    customer = graphene.Field(CustomerType, id=graphene.Int())
+    customer = graphene.Field(CustomerType, id=graphene.String())
+    id_type = graphene.Field(IDTypeType, id=graphene.String())
+    sim_type = graphene.Field(SimTypeType, id=graphene.String())
     customers = graphene.List(CustomerType)
     sim_types = graphene.List(SimTypeType)
     id_types = graphene.List(IDTypeType)
@@ -92,6 +94,14 @@ class Query(graphene.ObjectType):
     def resolve_customer(self, info, *args, **kwargs):
         id = kwargs.get('id')
         return Customer.objects.get(id=id)
+
+    def resolve_id_type(self, info, *args, **kwargs):
+        id = kwargs.get('id')
+        return IDType.objects.get(id=id)
+
+    def resolve_sim_type(self, info, *args, **kwargs):
+        id = kwargs.get('id')    
+        return SimType.objects.get(id=id)
 
     def resolve_customers(self, info, *args, **kwargs):
         return Customer.objects.all()
