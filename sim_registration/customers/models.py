@@ -1,5 +1,6 @@
 import django
 import datetime
+import uuid
 from django.db import models
 
 # Create your models here.
@@ -10,6 +11,7 @@ class IDType(models.Model):
         Attributes:
             - name: name of id type (eg. passport)
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -22,6 +24,7 @@ class SimType(models.Model):
         Attributes:
             - name: name of id type (eg. passport)
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -41,6 +44,7 @@ class Customer(models.Model):
             - address: customer address
             - nationality: customer nationality
     """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sim_type = models.ForeignKey(to=SimType, verbose_name="Sim Type", blank=True, on_delete=models.CASCADE, default=["Passport"])
     first_name = models.CharField("First Name", max_length=50)
     last_name = models.CharField("Last Name", max_length=50)
