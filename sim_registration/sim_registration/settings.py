@@ -26,12 +26,13 @@ SECRET_KEY = "django-insecure-78g__#31wmq)8n0)$3gjr*2451vk5ok)9%7j0(#6+8m)hc+o92
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.100.181", "localhost", "127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "graphql_jwt",
     "graphene_django",
     "customers",
     "django.contrib.admin",
@@ -50,6 +51,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware"
+    #"django.contrib.auth.middleware.AuthenticationMiddleware",
+    #"graphql_jwt.middleware.JSONWebTokenMiddleware",
 ]
 
 ROOT_URLCONF = "sim_registration.urls"
@@ -130,4 +134,33 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+GRAPHENE = {
+    "SCHEMA": "mysite.myschema.schema",
+    "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
+}
+
+AUTHENTICATION_BACKENDS = [
+    "graphql_jwt.backends.JSONWebTokenBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+#AUTHENTICATION_BACKENDS = [
+#    "graphql_jwt.backends.JSONWebTokenBackend",
+#    "django.contrib.auth.backends.ModelBackend",
+#]
+
+
+GRAPHQL_JWT = {
+    'SECRET_KEY': 'my-super-secret-key-1096501j-=0--0-asdf1+aVAWE150625',  # Replace with a secret key of your choice
+    'ALGORITHM': 'HS256',
+    'VERIFY_EXPIRATION': True,
+    'LEEWAY': 0,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'AUTH_HEADER': 'JWT',
+}
+
 
