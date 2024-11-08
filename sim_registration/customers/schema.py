@@ -1,11 +1,10 @@
 import graphene
-import graphql_jwt
 from graphene_django import DjangoObjectType
 from .models import Customer, SimType, IDType
-from .mutation import Mutation
-from graphql_jwt.decorators import login_required, token_auth
+#from .mutation import Mutation
+from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
-from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth import authenticate, get_user_model
 
 class CustomerType(DjangoObjectType):
     """
@@ -90,5 +89,3 @@ class Login(graphene.Mutation):
 
         token = get_token(user)
         return Login(token=token, user=user)
-
-schema = graphene.Schema(query=Query, mutation=Mutation)

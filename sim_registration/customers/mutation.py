@@ -1,6 +1,7 @@
 import graphene
 import graphql_jwt
 from .models import Customer, SimType, IDType
+from .file_upload import UploadMutation
 from .schema import CustomerType, Login
 
 class CreateCustomer(graphene.Mutation):
@@ -56,11 +57,11 @@ class deleteCustomer(graphene.Mutation):
         return deleteCustomer(ok=True)
 
 class Mutation( graphene.ObjectType):
-    #token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     create_customer = CreateCustomer.Field()
     delete_customer = deleteCustomer.Field()
     login = Login.Field()
     token_auth = graphql_jwt.ObtainJSONWebToken.Field()
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
+    file = UploadMutation.Field()
 
