@@ -26,7 +26,7 @@ class UploadMutation(graphene.Mutation):
         # do something with your file
         user = info.context.user
         customer = Customer.objects.get(id=customer_id)
-        location = settings.MEDIA_ROOT + '/uploads/' + str(user.pk) + '/'
+        location = settings.MEDIA_ROOT + '/uploads/' + customer_id + '/'
         fs = FileSystemStorage(location=location)
         filename = secure_filename(file.name)
         filename = fs.save(filename, file)
