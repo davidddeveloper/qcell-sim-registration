@@ -56,6 +56,20 @@ class deleteCustomer(graphene.Mutation):
         customer.delete()
         return deleteCustomer(ok=True)
 
+class SearchCustomer(graphene.Mutation):
+    class Arguments:
+        number = graphene.String(required=True)
+
+    ok = graphene.Boolean()
+    customers = graphene.List(CustomerType)
+
+    def mutate(self, info, number):
+        customers = Customer.objects.filter(mssisdn__contains=number)
+        ok = True if customers else False
+        # return Customer.objects.filter(mssisdn__contains=number)
+        return SearchCustomer(ok=ok, customers=customers)
+
+
 class Mutation( graphene.ObjectType):
     create_customer = CreateCustomer.Field()
     delete_customer = deleteCustomer.Field()
@@ -64,4 +78,5 @@ class Mutation( graphene.ObjectType):
     verify_token = graphql_jwt.Verify.Field()
     refresh_token = graphql_jwt.Refresh.Field()
     file = UploadMutation.Field()
+    search_number = SearchCustomer.Field()
 

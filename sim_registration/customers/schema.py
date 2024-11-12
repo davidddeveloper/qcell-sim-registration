@@ -47,6 +47,25 @@ class Query(graphene.ObjectType):
     sim_types = graphene.List(SimTypeType)
     id_types = graphene.List(IDTypeType)
 
+    total_sims = graphene.Int()
+    total_esims = graphene.Int()
+    total_standard_sims = graphene.Int()
+
+    @login_required
+    def resolve_total_sims(self, info, *args, **kwargs):
+        user = info.context.user
+        return Customer.objects.filter(agent=user).count()
+    
+    @login_required
+    def resolve_total_esims(self, info, *args, **kwargs):
+        user = info.context.user
+        return Customer.objects.filter(agent=user, sim_type_id=1).count()
+    
+    @login_required
+    def resolve_total_standard_sims(self, info, *args, **kwargs):
+        user = info.context.user
+        return Customer.objects.filter(agent=user, sim_type_id=2).count()
+
     @login_required
     def resolve_customer(self, info, *args, **kwargs):
         id = kwargs.get('id')

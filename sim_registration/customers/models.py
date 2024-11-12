@@ -2,6 +2,7 @@ import django
 import datetime
 import uuid
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class IDType(models.Model):
@@ -56,6 +57,7 @@ class Customer(models.Model):
     address = models.CharField("Address", max_length=200)
     nationality = models.CharField("Nationality", max_length=100)
     date_created = models.DateTimeField(verbose_name="Date Created", default=django.utils.timezone.now)
+    agent = models.ForeignKey(to=User, verbose_name="Agent", blank=True, on_delete=models.CASCADE, default=User.objects.get(username="david").id)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
