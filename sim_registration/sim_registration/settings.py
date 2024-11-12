@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ["192.168.100.181", "192.168.0.69", "localhost", "127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     "graphql_jwt",
     "graphene_django",
     "customers",
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -165,3 +167,23 @@ GRAPHQL_JWT = {
 }
 
 
+# cors
+# specific origins
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.100.181",
+    "http://192.168.0.69",
+    "http://localhost:62741",  # Or wherever the frontend runs
+]
+
+# Allow specific methods if needed
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+# Optional: Allow any headers if needed
+CORS_ALLOW_HEADERS = ['*']
