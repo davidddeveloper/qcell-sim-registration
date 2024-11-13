@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-78g__#31wmq)8n0)$3gjr*2451vk5ok)9%7j0(#6+8m)hc+o92"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -157,7 +161,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 GRAPHQL_JWT = {
-    'SECRET_KEY': 'my-super-secret-key-1096501j-=0--0-asdf1+aVAWE150625',  # Replace with a secret key of your choice
+    'SECRET_KEY': os.getenv("JWT_SECRET_KEY"), 
     'ALGORITHM': 'HS256',
     'VERIFY_EXPIRATION': True,
     'LEEWAY': 0,
