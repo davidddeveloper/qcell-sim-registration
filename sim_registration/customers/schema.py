@@ -5,6 +5,8 @@ from .models import Customer, SimType, IDType
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
 from django.contrib.auth import authenticate, get_user_model
+import regex as re
+
 
 class CustomerType(DjangoObjectType):
     """

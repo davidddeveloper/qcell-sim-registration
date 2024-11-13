@@ -187,3 +187,7 @@ CORS_ALLOW_METHODS = [
 
 # Optional: Allow any headers if needed
 CORS_ALLOW_HEADERS = ['*']
+
+# Allow phone numbers starting with these prefixes
+ALLOWED_PHONE_PREFIXES = ['031', '032', '034', '31', '32', '34']
+PHONE_NUMBER_MATCHING_REGEX = r"^(31|32|34|031|032|034)\d{6}$"

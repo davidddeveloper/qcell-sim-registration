@@ -49,7 +49,7 @@ class Customer(models.Model):
     sim_type = models.ForeignKey(to=SimType, verbose_name="Sim Type", blank=True, on_delete=models.CASCADE, default=["Passport"])
     first_name = models.CharField("First Name", max_length=50)
     last_name = models.CharField("Last Name", max_length=50)
-    mssisdn = models.CharField("MSSISDN Number", max_length=50)
+    mssisdn = models.CharField("Phone Number", max_length=15)  # Mobile Station International Subscriber Directory Numbe
     profession = models.CharField("Profession", max_length=100)
     id_number = models.CharField("ID Number", max_length=100)
     id_type = models.ForeignKey(to=IDType, verbose_name="ID Type", blank=True, on_delete=models.CASCADE, default=["Passport"])
