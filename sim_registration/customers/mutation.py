@@ -4,6 +4,7 @@ from .models import Customer, SimType, IDType
 from .file_upload import UploadMutation
 from .schema import CustomerType, Login
 from django.conf import settings
+from django.contrib.auth.models import User
 import regex as re
 
 
@@ -31,11 +32,14 @@ class CreateCustomer(graphene.Mutation):
         """
         sim_type = SimType.objects.get(id=sim_type_id)
         id_type = IDType.objects.get(id=id_type_id)
+        agent_id = info.context.user.id
+
+        if not agent_id:
+            return CreateCustomer(ok=False, message="You must be logged in to create a customer. Login by sending a valid JWT Token to the server.")
 
         # ensure that the number is 8 characters and starts with 31, 32 or 34
         # pre check
         for prefix in settings.ALLOWED_PHONE_PREFIXES:
-            print(prefix)
             if mssisdn.startswith(prefix):
                 if len(mssisdn) == 8 or len(mssisdn) == 7 or len(mssisdn) == 9:
                     is_match = True
@@ -48,6 +52,14 @@ class CreateCustomer(graphene.Mutation):
         if not is_match:
             return CreateCustomer(ok=False, message="Invalid phone number")
 
+        try:
+        # check if the number is already registered
+            is_registered = Customer.objects.get(mssisdn=mssisdn)
+            if is_registered:
+                return CreateCustomer(ok=False, message="Number already registered")
+        except Customer.DoesNotExist:
+            pass
+
         customer = Customer.objects.create(
             sim_type=sim_type,
             first_name=first_name,
@@ -58,12 +70,13 @@ class CreateCustomer(graphene.Mutation):
             id_type=id_type,
             id_picture=id_picture,
             address=address,
-            nationality=nationality
+            nationality=nationality,
+            agent = User.objects.get(id=agent_id)
         )
 
         # save
         customer.save()
-        return CreateCustomer(ok=True, customer=customer)
+        return CreateCustomer(ok=True, customer=customer, message="Customer created successfully")
 
 class deleteCustomer(graphene.Mutation):
     class Arguments:
