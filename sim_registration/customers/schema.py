@@ -94,7 +94,7 @@ class Query(graphene.ObjectType):
                 query = Customer.objects.filter(date_created__date=datetime.date.today())
 
             else:
-                when_splitted = when.split("daysago")
+                when_splitted = when.split("daysago") if "daysago" in when else when.split("DaysAgo")
                 serialize_when = int(when_splitted[0])
             
                 query = Customer.objects.filter(
