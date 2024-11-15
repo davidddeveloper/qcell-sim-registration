@@ -5,6 +5,7 @@ from .models import Customer, SimType, IDType
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
 from django.contrib.auth import authenticate, get_user_model
+import datetime
 import regex as re
 
 
@@ -45,7 +46,8 @@ class Query(graphene.ObjectType):
     customer = graphene.Field(CustomerType, id=graphene.String())
     id_type = graphene.Field(IDTypeType, id=graphene.String())
     sim_type = graphene.Field(SimTypeType, id=graphene.String())
-    customers = graphene.List(CustomerType)
+    customers = graphene.List(CustomerType, first=graphene.Int(), after=graphene.Int(), when=graphene.String())
+    customers_today = graphene.List(CustomerType, first=graphene.Int(), after=graphene.Int())
     sim_types = graphene.List(SimTypeType)
     id_types = graphene.List(IDTypeType)
 
@@ -84,8 +86,54 @@ class Query(graphene.ObjectType):
         return SimType.objects.get(id=id)
 
     @login_required
-    def resolve_customers(self, info, *args, **kwargs):
-        return Customer.objects.all()
+    def resolve_customers(self, info, first, after, when, *args, **kwargs):
+        query = Customer.objects.all()
+        if when:
+            # set query if when is today
+            if when in ['1dayago', '1daysago', 'today', 'Today']:
+                query = Customer.objects.filter(date_created__date=datetime.date.today())
+
+            else:
+                when_splitted = when.split("daysago")
+                serialize_when = int(when_splitted[0])
+            
+                query = Customer.objects.filter(
+                    date_created__date=datetime.date.today() - datetime.timedelta(days=(serialize_when - 1))
+                )
+            # if when == 1:
+                # query = Customer.objects.filter(date_created__date=datetime.date.today())
+            # elif when == 2:
+                # query = Customer.objects.filter(date_created__date=datetime.date.today() + datetime.timedelta(days=1))
+            # elif when == 3:
+                # query = Customer.objects.filter(date_created__date=datetime.date.today() - datetime.timedelta(days=3))
+
+        if first and after:
+            query = query[after:after + first]
+
+        else:
+            if first:
+                query = query[:first]
+
+            if after:
+                query = query[after:]
+
+        return query
+    
+    @login_required
+    def resolve_customers_today(self, info, first, after, *args, **kwargs):
+        query = Customer.objects.filter(date_created__date=datetime.date.today())
+
+        if first and after:
+            query = query[after:after + first]
+
+        else:
+            if first:
+                query = query[:first]
+
+            if after:
+                query = query[after:]
+
+        return query
 
     @login_required
     def resolve_sim_types(self, info, *args, **kwargs):
