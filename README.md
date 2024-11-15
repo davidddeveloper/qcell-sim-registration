@@ -81,7 +81,7 @@ create a docker-compose.yml file for this project in the following structure
 
 
 #### Basic docker-compose commands
-ensure that you have a docker-compose.yml file with the correct information a start above.
+ensure that you have a docker-compose.yml file with the correct information as stated above.
 
     sudo docker-compose build  # builds (install, compile) the docker image(s) specified in the docker-compose.yml file
 
@@ -114,10 +114,10 @@ Pull the repository on the server where you want to deploy this branch (git chec
 The [Dockerfile](./Dockerfile) is already created and can be found in the root repository (same as where this README is)
 
 ##### STEP 2: Create a .env file in sim_registration/
-Passed the correct information in the .env in the djang-app in sim_registration in the following structure
+Passed the correct information in the .env in the django-app in sim_registration in the following structure
 
     SECRET_KEY = ""  # SECRET_KEY for django
-    JWT_SECRET_KEY = ""  # JWT_SECRET_KEY for djang-jwt
+    JWT_SECRET_KEY = ""  # JWT_SECRET_KEY for django-jwt
 
     # Note that the values you passed here should correspond with what is in the docker-compose.yml file
 
@@ -185,7 +185,7 @@ SHOULD CORRESPOND WITH WHAT IS IN THE .env file
 
 ##### STEP 4: Build the images 🦾
 
-    sudo docker-compse build
+    sudo docker-compose build
 
 check if the images have been build
 
