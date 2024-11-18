@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.100.181", "192.168.0.69", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.100.181", "192.168.0.69", "localhost", "127.0.0.1", "qcell-sim-registration.davidconteh.engineer"]
 
 
 # Application definition
@@ -135,9 +135,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_URL = "static/"
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-MEDIA_URL = "media/"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
@@ -183,6 +185,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.100.181",
     "http://192.168.0.69",
     "http://localhost:62741",  # Or wherever the frontend runs
+    "https://qcell-sim-registration.davidconteh.engineer",
+    "https://qcell-sim-registration.davidconteh.engineer"
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://qcell-sim-registration.davidconteh.engineer",
+    "https://qcell-sim-registration.davidconteh.engineer"
+
 ]
 
 # Allow specific methods if needed
