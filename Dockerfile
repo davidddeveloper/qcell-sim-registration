@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -10,6 +10,10 @@ WORKDIR /app
 
 # Copy the requirements file into the container
 COPY sim_registration/requirements.txt /app/requirements.txt
+
+# doing this inorder to install mysqlclient with pip
+RUN apt-get update && apt-get install -y pkg-config libmariadb-dev build-essential python3-dev
+
 
 # Install dependencies
 RUN pip install --no-cache-dir -r /app/requirements.txt
@@ -24,7 +28,10 @@ COPY sim_registration/.env /app/.env
 EXPOSE 8000
 
 # Collect static files (if using Django's collectstatic)
-RUN python manage.py collectstatic --no-input
+# RUN python manage.py collectstatic --no-input
+
+# migrate
+CMD ["sh", "-c", "python manage.py migrate && gunicorn sim_registration.wsgi:application --bind 0.0.0.0:8000"]
 
 # Run the Django app with Gunicorn
-CMD ["gunicorn", "sim_registration.wsgi:application", "--bind", "0.0.0.0:8000"]
+# CMD ["gunicorn", "sim_registration.wsgi:application", "--bind", "0.0.0.0:8000"]
