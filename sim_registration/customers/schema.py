@@ -61,12 +61,14 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_total_esims(self, info, *args, **kwargs):
         user = info.context.user
-        return Customer.objects.filter(agent=user, sim_type_id=1).count()
+        sim_type = SimType.objects.get(name="Embedded Sim (eSim)")
+        return Customer.objects.filter(agent=user, sim_type_id=sim_type.id).count()
     
     @login_required
     def resolve_total_standard_sims(self, info, *args, **kwargs):
         user = info.context.user
-        return Customer.objects.filter(agent=user, sim_type_id=2).count()
+        sim_type = SimType.objects.get(name="Standard Sim")
+        return Customer.objects.filter(agent=user, sim_type_id=sim_type.id).count()
 
     @login_required
     def resolve_customer(self, info, *args, **kwargs):
