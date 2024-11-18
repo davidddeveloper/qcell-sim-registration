@@ -92,6 +92,9 @@ class Query(graphene.ObjectType):
             # set query if when is today
             if when in ['1dayago', '1daysago', 'today', 'Today']:
                 query = Customer.objects.filter(date_created__date=datetime.date.today())
+            
+            elif when in ['yesterday', 'Yesterday']:
+                query = Customer.objects.filter(date_created__date=datetime.date.today() - datetime.timedelta(days=1))
 
             else:
                 when_splitted = when.split("daysago") if "daysago" in when else when.split("DaysAgo")
