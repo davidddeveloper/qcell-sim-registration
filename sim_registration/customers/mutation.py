@@ -52,6 +52,14 @@ class CreateCustomer(graphene.Mutation):
         if not is_match:
             return CreateCustomer(ok=False, message="Invalid phone number")
 
+        try:
+        # check if the number is already registered
+            is_registered = Customer.objects.get(mssisdn=mssisdn)
+            if is_registered:
+                return CreateCustomer(ok=False, message="Number already registered")
+        except Customer.DoesNotExist:
+            pass
+
         customer = Customer.objects.create(
             sim_type=sim_type,
             first_name=first_name,
@@ -68,7 +76,7 @@ class CreateCustomer(graphene.Mutation):
 
         # save
         customer.save()
-        return CreateCustomer(ok=True, customer=customer)
+        return CreateCustomer(ok=True, customer=customer, message="Customer created successfully")
 
 class deleteCustomer(graphene.Mutation):
     class Arguments:
