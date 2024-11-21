@@ -31,6 +31,13 @@ class SimType(models.Model):
     def __str__(self):
         return self.name
 
+class Gender(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
 class Customer(models.Model):
     """
         Represent a new Qcell customer
@@ -48,7 +55,9 @@ class Customer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sim_type = models.ForeignKey(to=SimType, verbose_name="Sim Type", blank=True, on_delete=models.CASCADE, default=["Passport"])
     first_name = models.CharField("First Name", max_length=50)
+    middle_name = models.CharField("Middle Name", max_length=50, blank=True, null=True)
     last_name = models.CharField("Last Name", max_length=50)
+    gender = models.ForeignKey(to=Gender, verbose_name="Gender", blank=True, on_delete=models.CASCADE, default=Gender.objects.get(name="Male").id, related_name="customer_gender")
     mssisdn = models.CharField("Phone Number", max_length=15)  # Mobile Station International Subscriber Directory Numbe
     profession = models.CharField("Profession", max_length=100)
     id_number = models.CharField("ID Number", max_length=100)
