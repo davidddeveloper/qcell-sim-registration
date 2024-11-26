@@ -35,6 +35,8 @@ We are using the graphql api which nicely blends with django.
   > first: 2 - means retrive the first two customers
   >
   > after: 4, first: 4 - means retrive 4 customers after the first 4 / starting after the first 4
+  >
+  > when: example 1. when: 'yesterday' 2. when: '2daysago'
 
 ##### customersToday (after: 0, first: 0)
 > return the list of customers registered today
