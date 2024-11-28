@@ -33,7 +33,7 @@ class CreateCustomer(graphene.Mutation):
         """
         sim_type = SimType.objects.get(id=sim_type_id)
         id_type = IDType.objects.get(id=id_type_id)
-        gender_type = Gender.objects.get(name=gender.capitalize())
+
         number = Customer.objects.filter(mssisdn=mssisdn)
 
         if number:
@@ -55,13 +55,14 @@ class CreateCustomer(graphene.Mutation):
         if not is_match:
             return CreateCustomer(ok=False, message="Invalid phone number")
         
-        if not gender_type:
+        if gender not in ['m', 'M', 'f', 'F']:
             return CreateCustomer(ok=False, message="Invalid gender")
 
         customer = Customer.objects.create(
             sim_type=sim_type,
             first_name=first_name,
             last_name=last_name,
+            gender=gender
             mssisdn=mssisdn,
             profession=profession,
             id_number=id_number,
