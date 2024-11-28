@@ -88,8 +88,15 @@ WSGI_APPLICATION = "sim_registration.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        #"ENGINE": "django.db.backends.sqlite3",
+        #"NAME": BASE_DIR / "db.sqlite3",
+
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": 'qcell_sim_registration_2',
+        "USER": 'root',
+        "PASSWORD": 'root',
+        "HOST": 'localhost',
+        "PORT": 3306,
     }
 }
 
@@ -176,7 +183,9 @@ GRAPHQL_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.100.181",
     "http://192.168.0.69",
-    "http://localhost:62741",  # Or wherever the frontend runs
+    "http://localhost:57372",  # Or wherever the frontend runs
+    
+
 ]
 
 # Allow specific methods if needed
