@@ -184,7 +184,9 @@ GRAPHQL_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://192.168.100.181",
     "http://192.168.0.69",
-    "http://localhost:62741",  # Or wherever the frontend runs
+    "http://localhost:57372",  # Or wherever the frontend runs
+    
+
 ]
 
 # Allow specific methods if needed
