@@ -1,6 +1,6 @@
 import graphene
 from graphene_django import DjangoObjectType
-from .models import Customer, SimType, IDType
+from .models import Customer
 #from .mutation import Mutation
 from graphql_jwt.decorators import login_required
 from graphql_jwt.shortcuts import get_token
@@ -17,21 +17,6 @@ class CustomerType(DjangoObjectType):
         model = Customer
         fields = "__all__"
 
-class SimTypeType(DjangoObjectType):
-    """
-        Represent a GraphQL Sim Type for querying it
-    """
-    class Meta:
-        model = SimType
-        fields = "__all__"
-
-class IDTypeType(DjangoObjectType):
-    """
-        Represent a GraphQL IDType Type for querying it
-    """
-    class Meta:
-        model = IDType
-        fields = "__all__"
 
 class UserType(DjangoObjectType):
     class Meta:
@@ -44,12 +29,8 @@ class Query(graphene.ObjectType):
         specifies the set of operation for quering
     """
     customer = graphene.Field(CustomerType, id=graphene.String())
-    id_type = graphene.Field(IDTypeType, id=graphene.String())
-    sim_type = graphene.Field(SimTypeType, id=graphene.String())
     customers = graphene.List(CustomerType, first=graphene.Int(), after=graphene.Int(), when=graphene.String())
     customers_today = graphene.List(CustomerType, first=graphene.Int(), after=graphene.Int())
-    sim_types = graphene.List(SimTypeType)
-    id_types = graphene.List(IDTypeType)
 
     total_sims = graphene.Int()
     total_esims = graphene.Int()
@@ -63,29 +44,27 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_total_esims(self, info, *args, **kwargs):
         user = info.context.user
-        sim_type = SimType.objects.get(name="Embedded Sim (eSim)")
-        return Customer.objects.filter(agent=user, sim_type_id=sim_type.id).count()
+        return Customer.objects.filter(agent=user, sim_type='esim').count()
     
     @login_required
     def resolve_total_standard_sims(self, info, *args, **kwargs):
         user = info.context.user
-        sim_type = SimType.objects.get(name="Standard Sim")
-        return Customer.objects.filter(agent=user, sim_type_id=sim_type.id).count()
+        return Customer.objects.filter(agent=user, sim_type='standard').count()
 
     @login_required
     def resolve_customer(self, info, *args, **kwargs):
         id = kwargs.get('id')
         return Customer.objects.get(id=id)
 
-    @login_required
-    def resolve_id_type(self, info, *args, **kwargs):
-        id = kwargs.get('id')
-        return IDType.objects.get(id=id)
+    #@login_required
+    #def resolve_id_type(self, info, *args, **kwargs):
+        #id = kwargs.get('id')
+        #return IDType.objects.get(id=id)
 
-    @login_required
-    def resolve_sim_type(self, info, *args, **kwargs):
-        id = kwargs.get('id')    
-        return SimType.objects.get(id=id)
+    #@login_required
+    #def resolve_sim_type(self, info, *args, **kwargs):
+        #id = kwargs.get('id')    
+        #return SimType.objects.get(id=id)
 
     @login_required
     def resolve_customers(self, info, first, after, when, *args, **kwargs):
