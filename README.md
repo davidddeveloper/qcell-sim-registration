@@ -41,14 +41,8 @@ We are using the graphql api which nicely blends with django.
 ##### customersToday (after: 0, first: 0)
 > return the list of customers registered today
 >
-##### idType (id)
-> takes an id and returns the idType associated with the id
->
 ##### idTypes
 > return the list of id types
->
-##### simType (id)
-> takes an id and returns the simType associated with the id
 >
 ##### simTypes
 > return the list of sim types
