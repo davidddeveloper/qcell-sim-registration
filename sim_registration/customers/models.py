@@ -31,12 +31,17 @@ class SimType(models.Model):
     def __str__(self):
         return self.name
 
-class Gender(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=50)
+# class Gender(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     name = models.CharField(max_length=50)
+# 
+#     def __str__(self):
+#         return self.name
 
-    def __str__(self):
-        return self.name
+GENDERS = {
+    "m": "Male",
+    "f": "Female",
+}
 
 class Customer(models.Model):
     """
@@ -57,7 +62,7 @@ class Customer(models.Model):
     first_name = models.CharField("First Name", max_length=50)
     middle_name = models.CharField("Middle Name", max_length=50, blank=True, null=True)
     last_name = models.CharField("Last Name", max_length=50)
-    gender = models.ForeignKey(to=Gender, verbose_name="Gender", blank=True, on_delete=models.CASCADE, default=Gender.objects.get(name="Male").id, related_name="customer_gender")
+    gender = models.CharField(max_length=1, choices=GENDERS, default='m')
     mssisdn = models.CharField("Phone Number", max_length=15)  # Mobile Station International Subscriber Directory Numbe
     profession = models.CharField("Profession", max_length=100)
     id_number = models.CharField("ID Number", max_length=100)

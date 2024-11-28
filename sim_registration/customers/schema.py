@@ -63,12 +63,14 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_total_esims(self, info, *args, **kwargs):
         user = info.context.user
-        return Customer.objects.filter(agent=user, sim_type_id=1).count()
+        sim_type = SimType.objects.get(name="Embedded Sim (eSim)")
+        return Customer.objects.filter(agent=user, sim_type_id=sim_type.id).count()
     
     @login_required
     def resolve_total_standard_sims(self, info, *args, **kwargs):
         user = info.context.user
-        return Customer.objects.filter(agent=user, sim_type_id=2).count()
+        sim_type = SimType.objects.get(name="Standard Sim")
+        return Customer.objects.filter(agent=user, sim_type_id=sim_type.id).count()
 
     @login_required
     def resolve_customer(self, info, *args, **kwargs):
@@ -87,21 +89,22 @@ class Query(graphene.ObjectType):
 
     @login_required
     def resolve_customers(self, info, first, after, when, *args, **kwargs):
-        query = Customer.objects.all()
+        user = info.context.user
+        query = Customer.objects.filter(agent=user)
         if when:
             # set query if when is today
             if when in ['1dayago', '1daysago', 'today', 'Today']:
-                query = Customer.objects.filter(date_created__date=datetime.date.today())
+                query = Customer.objects.filter(agent=user, date_created__date=datetime.date.today())
             
             elif when in ['yesterday', 'Yesterday']:
-                query = Customer.objects.filter(date_created__date=datetime.date.today() - datetime.timedelta(days=1))
+                query = Customer.objects.filter(agent=user, date_created__date=datetime.date.today() - datetime.timedelta(days=1))
 
             else:
                 when_splitted = when.split("daysago") if "daysago" in when else when.split("DaysAgo")
                 serialize_when = int(when_splitted[0])
             
                 query = Customer.objects.filter(
-                    date_created__date=datetime.date.today() - datetime.timedelta(days=(serialize_when - 1))
+                    agent=user, date_created__date=datetime.date.today() - datetime.timedelta(days=(serialize_when - 1))
                 )
             # if when == 1:
                 # query = Customer.objects.filter(date_created__date=datetime.date.today())
@@ -124,7 +127,8 @@ class Query(graphene.ObjectType):
     
     @login_required
     def resolve_customers_today(self, info, first, after, *args, **kwargs):
-        query = Customer.objects.filter(date_created__date=datetime.date.today())
+        user = info.context.user
+        query = Customer.objects.filter(agent=user,date_created__date=datetime.date.today())
 
         if first and after:
             query = query[after:after + first]

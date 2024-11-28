@@ -1,6 +1,6 @@
 import graphene
 import graphql_jwt
-from .models import Customer, SimType, IDType
+from .models import Customer, Gender, SimType, IDType
 from .file_upload import UploadMutation
 from .schema import CustomerType, Login
 from django.conf import settings
@@ -11,7 +11,9 @@ class CreateCustomer(graphene.Mutation):
     class Arguments:
         sim_type_id = graphene.String(required=True)
         first_name = graphene.String(required=True)
+        middle_name = graphene.String(required=True)
         last_name = graphene.String(required=True)
+        gender = graphene.String(required=True)
         mssisdn = graphene.String(required=True)
         profession = graphene.String(required=True)
         id_number = graphene.String(required=True)
@@ -25,12 +27,17 @@ class CreateCustomer(graphene.Mutation):
     customer = graphene.Field(CustomerType)
     message = graphene.String()
 
-    def mutate(self, info, sim_type_id, first_name, last_name, mssisdn, profession, id_number, id_type_id, id_picture, address, nationality):
+    def mutate(self, info, sim_type_id, first_name, last_name, middle_name, gender, mssisdn, profession, id_number, id_type_id, id_picture, address, nationality):
         """
             performs the mutation using django ORM
         """
         sim_type = SimType.objects.get(id=sim_type_id)
         id_type = IDType.objects.get(id=id_type_id)
+        gender_type = Gender.objects.get(name=gender.capitalize())
+        number = Customer.objects.filter(mssisdn=mssisdn)
+
+        if number:
+            return CreateCustomer(ok=False, message="Sim is already registered")
 
         # ensure that the number is 8 characters and starts with 31, 32 or 34
         # pre check
@@ -47,6 +54,9 @@ class CreateCustomer(graphene.Mutation):
         is_match = re.match(settings.PHONE_NUMBER_MATCHING_REGEX, mssisdn)
         if not is_match:
             return CreateCustomer(ok=False, message="Invalid phone number")
+        
+        if not gender_type:
+            return CreateCustomer(ok=False, message="Invalid gender")
 
         customer = Customer.objects.create(
             sim_type=sim_type,
