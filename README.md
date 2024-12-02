@@ -72,7 +72,7 @@ We are using the graphql api which nicely blends with django.
   >
   > required field
   > 
-  > ![create_customer_mutation](https://github.com/user-attachments/assets/c1c282ab-a30b-4e33-ac4f-0a0c3d77c7bd)
+  > ![create-customer-mutation](https://github.com/user-attachments/assets/ee0dae43-0667-4d88-a79c-158cc6fc6a14)
 
   ###### Note on Gender field:
   >
