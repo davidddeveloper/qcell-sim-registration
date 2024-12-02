@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.100.181", "192.168.0.69", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["192.168.100.181", "192.168.0.69", "localhost", "127.0.0.1", "192.168.100.180"]
 
 
 # Application definition
@@ -184,7 +184,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.100.181",
     "http://192.168.0.69",
     "http://localhost:57372",  # Or wherever the frontend runs
-    
+    "http://192.168.100.180"
 
 ]
 

@@ -71,7 +71,7 @@ class CreateCustomer(graphene.Mutation):
         standard_sim_type_format = [
             'standard_sim', 'standard sim',
             'Standard Sim', 'STANDARDSIM',
-            'standardsim', 'standard_sim'
+            'standardsim', 'standard_sim',
             'standard', 'Standard', 'STANDARD'
         ]
 
@@ -145,7 +145,7 @@ class CreateCustomer(graphene.Mutation):
 
         # save
         customer.save()
-        return CreateCustomer(ok=True, customer=customer)
+        return CreateCustomer(ok=True, customer=customer, message=f"Sim successfully registered for {first_name}.")
 
 class deleteCustomer(graphene.Mutation):
     class Arguments:
