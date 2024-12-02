@@ -73,7 +73,63 @@ We are using the graphql api which nicely blends with django.
   > required field
   > 
   > ![create_customer_mutation](https://github.com/user-attachments/assets/c1c282ab-a30b-4e33-ac4f-0a0c3d77c7bd)
+
+  ###### Note on Gender field:
   >
+  > currently it takes `male` and `female` in the following shape:
+  >
+    Male:
+      male
+      Male
+      MALE
+      m
+      M
+
+    Female:
+      female
+      Female
+      FEMALE
+      F
+      f
+
+  ###### Note on IdType field:
+  >
+  > currently it takes `license`, `national id`, `voters id` and `passport` in the following shape:
+  > 
+  -  License
+  > `License` `license` `LICENSE` `lic` `LIC`
+  >
+  - Passport
+  > `Passport` `passport` `PASSPORT` `PP` `PP`
+  >
+  - National Id
+  > `NIN`, `nin`, `national_id`,
+    `Voters_id`, `National_ID`,
+    `national ID`, `National ID`,
+    `national id`, `NATIONAL ID`
+    `nationalid`, `NATIONALID`
+  >
+  - Voters Id
+  > `VI`, `vi`, `voters_id`,
+    `Voters_id`, `Voters_ID`,
+    `voters ID`, `Voters ID`,
+    `voters id`, `VOTERS ID`
+    `votersid`, `VOTERSID`
+
+  ###### Note on SimType field:
+  >
+  > currently it takes `Standard sim` and `Embedded sim` in the following shape:
+  > 
+  - Embedded Sim
+  > `esim`,
+    `Esim`,
+    `ESIM`,
+  - Standard Sim
+  > `standard_sim`, `standard sim`,
+    `Standard Sim`, `STANDARDSIM`,
+    `standardsim`, `standard_sim`,
+    `standard`, `Standard`, `STANDARD`
+
   ##### deleteCustomer
   > takes an id and deletes a customer
   >
