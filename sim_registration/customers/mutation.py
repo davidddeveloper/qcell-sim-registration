@@ -98,7 +98,7 @@ class CreateCustomer(graphene.Mutation):
         if not is_match:
             return CreateCustomer(ok=False, message="Invalid phone number")
         
-        if gender not in ['m', 'M', 'male', 'Female', 'f', 'F', 'female', 'Female']:
+        if gender not in ['m', 'M', 'male', 'Male', 'MALE', 'f', 'F', 'female', 'Female', 'FEMALE']:
             return CreateCustomer(ok=False, message="Invalid gender")
         
         if id_type not in accepted_id_format:  # checks for correct format
